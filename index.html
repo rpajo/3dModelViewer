@@ -3,13 +3,26 @@
 
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-      <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="css/normalize.css">
+      <link rel="stylesheet" href="css/skeleton.css">      
+      <link rel="stylesheet" href="css/style.css">
       <title>Model Viewer</title>
    </head>
 
    <body>
-       <canvas id="canvas"></canvas>
-
+       <div class="container">
+           <h1>Model Viewer</h1>
+           <div class="row">
+               <div class="nine columns">
+                   <canvas id="canvas">WebGL is not supported in your browser</canvas>
+               </div>
+               <div class="three columns">
+                   <h4>Nastavitve</h4>
+                   <h5>Tla</h5>
+               </div>
+           </div>
+       </div>
+       
 
        <script src="js/babylon.js"></script>
        <script src="js/babylon.objFileLoader.js"></script>
