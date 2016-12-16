@@ -1,14 +1,12 @@
 
-
-var canvas = document.getElementById('canvas');
-
-var engine = new BABYLON.Engine(canvas, true);
-
+var scene, engine, canvas, parentMesh, modelLoader;
+var modelPath = "./";
+var fileInput = document.getElementById('fileInput');
 
 var initScene = function() {
     console.log("init");
 
-    var scene = new BABYLON.Scene(engine);
+    scene = new BABYLON.Scene(engine);
 
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
     camera.setPosition(new BABYLON.Vector3(0, 15, -10));
@@ -36,6 +34,7 @@ var initScene = function() {
 
     console.log("floor init");
     var floor = BABYLON.Mesh.CreateGround("floor", 10, 10, 2, scene);
+    floor.position.y += -2;
     var floorMaterial = new BABYLON.StandardMaterial("floorMat", scene);
     floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/Beech_01/VizPeople_Beech_1_Diffuse_2.jpg", scene);
     floorMaterial.diffuseTexture.uScale = 2.0;//Repeat 5 times on the Vertical Axes
@@ -44,31 +43,51 @@ var initScene = function() {
     //floorMaterial.bumpTexture = new BABYLON.Texture("assets/floor/hardwood_normal.jpg", scene);
     floor.material = floorMaterial;
 
-    // model loader
-    var loader = new BABYLON.AssetsManager(scene);
 
     BABYLON.OBJFileLoader.OPTIMIZE_WITH_UV = true;
-    var model = loader.addMeshTask("model", "", "./assets/", "VRCEK.obj");
-    model.onSuccess = function(promise) {
-        promise.loadedMeshes.forEach(function(mesh) {
-            mesh.scaling = new BABYLON.Vector3(5,5,5);
-            mesh.position.y += 1;
-        });
 
-    };
+}
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("init scene");
+    canvas = document.getElementById('canvas');
+    engine = new BABYLON.Engine(canvas, true);
+    initScene();
+    run();
+});
 
-    loader.load();
-    // Leave this function
-    return scene;
+
+var run = function() {
+    console.log("render loop");
+    engine.runRenderLoop(function () {
+        scene.render();
+    });
 }
 
-var scene = initScene();
-
-engine.runRenderLoop(function () {
-    scene.render();
-});
 
 // Watch for browser/canvas resize events
 window.addEventListener("resize", function () {
     engine.resize();
+});
+
+
+fileInput.addEventListener('change', function(e) {
+    // get file name and file path
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    modelPath = file.name;
+    var modelDir = modelPath.substring(0, modelPath.length-4);
+
+    // new loader
+    var loader = new BABYLON.AssetsManager(scene);
+    
+    if (modelLoader != null) {
+        modelLoader.loadedMeshes.forEach(function(mesh) {
+            mesh.dispose();
+        });
+    }
+
+    modelLoader = loader.addMeshTask("model", "", "assets/models/" + modelDir + "/", modelPath);
+ 
+
+    loader.load();
 });
