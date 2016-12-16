@@ -10,6 +10,11 @@ var initScene = function() {
 
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
     camera.setPosition(new BABYLON.Vector3(0, 15, -10));
+    camera.upperBetaLimit = 1.6;
+    camera.upperRadiusLimit = 12;
+    camera.lowerRadiusLimit = 3;
+    camera.wheelPrecision = 50;
+    camera.angularSensibilityX = 1000;
     camera.attachControl(canvas, true, null); //null - dont move camera
 
 
@@ -34,7 +39,7 @@ var initScene = function() {
 
     console.log("floor init");
     var floor = BABYLON.Mesh.CreateGround("floor", 10, 10, 2, scene);
-    floor.position.y += -2;
+    floor.position.y = -1;
     var floorMaterial = new BABYLON.StandardMaterial("floorMat", scene);
     floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/Beech_01/VizPeople_Beech_1_Diffuse_2.jpg", scene);
     floorMaterial.diffuseTexture.uScale = 2.0;//Repeat 5 times on the Vertical Axes
@@ -43,6 +48,7 @@ var initScene = function() {
     //floorMaterial.bumpTexture = new BABYLON.Texture("assets/floor/hardwood_normal.jpg", scene);
     floor.material = floorMaterial;
 
+    //var box = BABYLON.Mesh.CreateSphere("sphere", 10.0, 1.0, scene, false,  BABYLON.Mesh.DEFAULTSIDE);
 
     BABYLON.OBJFileLoader.OPTIMIZE_WITH_UV = true;
 
