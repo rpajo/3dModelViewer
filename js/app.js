@@ -2,6 +2,7 @@
 var scene, engine, canvas, parentMesh, modelLoader;
 var modelPath = "./";
 var fileInput = document.getElementById('fileInput');
+var floorMaterial;
 
 var initScene = function() {
     console.log("init");
@@ -40,8 +41,8 @@ var initScene = function() {
     console.log("floor init");
     var floor = BABYLON.Mesh.CreateGround("floor", 10, 10, 2, scene);
     floor.position.y = -1;
-    var floorMaterial = new BABYLON.StandardMaterial("floorMat", scene);
-    floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/Beech_01/VizPeople_Beech_1_Diffuse_2.jpg", scene);
+    floorMaterial = new BABYLON.StandardMaterial("floorMat", scene);
+    floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/Beech_01/Beech_01.jpg", scene);
     floorMaterial.diffuseTexture.uScale = 2.0;//Repeat 5 times on the Vertical Axes
     floorMaterial.diffuseTexture.vScale = 2.0;//Repeat 5 times on the Horizontal Axes
     floorMaterial.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5); // no ground reflection
@@ -97,3 +98,10 @@ fileInput.addEventListener('change', function(e) {
 
     loader.load();
 });
+
+
+var changeFloor = function() {
+    var newMat = document.querySelector('input:checked').value;
+    console.log("assets/floor/" + newMat+ "/" + newMat +".jpg");
+    floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/" + newMat+ "/" + newMat +".jpg", scene);
+};
