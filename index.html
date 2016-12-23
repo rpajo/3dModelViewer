@@ -13,15 +13,23 @@
        <div class="container">
            <h1>Model Viewer</h1>
            <div class="row">
-               <div class="nine columns">
-                   <input id="fileInput" type="file" style="display:none" />
-                   <button class="button-primary" onclick="document.getElementById('fileInput').click();">Izberi .obj model</button>
-                   <canvas id="canvas">WebGL is not supported in your browser</canvas>
-               </div>
-               <div class="three columns">
-                   <h4>Nastavitve</h4>
-                   <h5>Tla</h5>
-               </div>
+                <div class="nine columns">
+                    <input id="fileInput" type="file" style="display:none" />
+                    <button class="button-primary" onclick="document.getElementById('fileInput').click();">Izberi .obj model</button>
+                    <canvas id="canvas">WebGL is not supported in your browser</canvas>
+                </div>
+            <div class="three columns">
+                <h4>Nastavitve</h4>
+                <h5>Tla</h5>
+                <form>
+                    <input type="radio"value="Beech_01" name="floor" checked>
+                    <span class="label-body">Floor 1</span>
+                    <input type="radio" value="Exotic_01" name="floor">
+                    <span class="label-body">Floor 2</span>
+                    <input type="radio" value="Oak_02" name="floor">
+                    <span class="label-body">Floor 3</span>
+                </form>
+            </div>
            </div>
        </div>
        
