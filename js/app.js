@@ -11,7 +11,7 @@ var initScene = function() {
     
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
     camera.setPosition(new BABYLON.Vector3(0, 15, -10));
-    camera.upperBetaLimit = 1.6;
+    camera.upperBetaLimit = 1.5;
     camera.upperRadiusLimit = 12;
     camera.lowerRadiusLimit = 3;
     camera.wheelPrecision = 50;
