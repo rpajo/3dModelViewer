@@ -1,7 +1,6 @@
 
 var scene, engine, canvas, parentMesh, modelLoader;
 var modelPath = "./";
-var fileInput = document.getElementById('fileInput');
 var floorMaterial;
 
 var initScene = function() {
@@ -9,6 +8,7 @@ var initScene = function() {
 
     scene = new BABYLON.Scene(engine);
 
+    
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
     camera.setPosition(new BABYLON.Vector3(0, 15, -10));
     camera.upperBetaLimit = 1.6;
@@ -40,7 +40,7 @@ var initScene = function() {
 
     console.log("floor init");
     var floor = BABYLON.Mesh.CreateGround("floor", 10, 10, 2, scene);
-    floor.position.y = -1;
+    floor.position.y = 0;
     floorMaterial = new BABYLON.StandardMaterial("floorMat", scene);
     floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/Beech_01/Beech_01.jpg", scene);
     floorMaterial.diffuseTexture.uScale = 2.0;//Repeat 5 times on the Vertical Axes
@@ -53,55 +53,68 @@ var initScene = function() {
 
     BABYLON.OBJFileLoader.OPTIMIZE_WITH_UV = true;
 
-}
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("init scene");
-    canvas = document.getElementById('canvas');
-    engine = new BABYLON.Engine(canvas, true);
-    initScene();
-    run();
-});
-
+};
 
 var run = function() {
     console.log("render loop");
     engine.runRenderLoop(function () {
         scene.render();
     });
-}
+};
 
 
-// Watch for browser/canvas resize events
-window.addEventListener("resize", function () {
-    engine.resize();
-});
+
+window.onload =  function () {
+
+    console.log("window loaded");
+    // Watch for browser/canvas resize events
+    window.addEventListener("resize", function () {
+        engine.resize();
+    });
+
+    var fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', function(e) {
+        // get file name and file path
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+        modelPath = file.name;
+        var modelDir = modelPath.substring(0, modelPath.length-4);
+
+        // new loader
+        var loader = new BABYLON.AssetsManager(scene);
+        
+        if (modelLoader != null) {
+            modelLoader.loadedMeshes.forEach(function(mesh) {
+                mesh.dispose();
+            });
+        }
+
+        modelLoader = loader.addMeshTask("model", "", "assets/models/" + modelDir + "/", modelPath);
+        
+        modelLoader.onSuccess = function(t) {
+            console.log(t);
+            t.loadedMeshes.forEach(function(m) {
+                console.log(m);
+                m.position.y += 0.0;
+                m.position.z -= 1.5;
+                m.rotation.x = -Math.PI/2;
+            });
+        }
+
+        loader.load();
+    });
+
+    document.getElementById("floorSelect").addEventListener("change", function(e) {
+        var newMat = document.querySelector('input:checked').value;
+        console.log("assets/floor/" + newMat+ "/" + newMat +".jpg");
+        floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/" + newMat+ "/" + newMat +".jpg", scene);
+    });
 
 
-fileInput.addEventListener('change', function(e) {
-    // get file name and file path
-    var file = fileInput.files[0];
-    var reader = new FileReader();
-    modelPath = file.name;
-    var modelDir = modelPath.substring(0, modelPath.length-4);
-
-    // new loader
-    var loader = new BABYLON.AssetsManager(scene);
-    
-    if (modelLoader != null) {
-        modelLoader.loadedMeshes.forEach(function(mesh) {
-            mesh.dispose();
-        });
-    }
-
-    modelLoader = loader.addMeshTask("model", "", "assets/models/" + modelDir + "/", modelPath);
- 
-
-    loader.load();
-});
-
-
-var changeFloor = function() {
-    var newMat = document.querySelector('input:checked').value;
-    console.log("assets/floor/" + newMat+ "/" + newMat +".jpg");
-    floorMaterial.diffuseTexture = new BABYLON.Texture("assets/floor/" + newMat+ "/" + newMat +".jpg", scene);
+    // Run scene
+    console.log("init scene");
+    canvas = document.getElementById('canvas');
+    engine = new BABYLON.Engine(canvas, true);
+    initScene();
+    run();
 };
